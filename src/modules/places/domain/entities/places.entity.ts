@@ -62,6 +62,6 @@ export class PlacesIntity {
     return this.tags;
   }
   public addSeats(seat: SeatsEntity): void {
-    this.seats.push(seat);
+    this.seats?.push(seat);
   }
 }

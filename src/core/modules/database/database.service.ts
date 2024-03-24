@@ -10,7 +10,8 @@ const creds = {
 
 @Injectable()
 export class DatabaseService {
-  private db: NodePgDatabase<typeof schema>;
+  private db!: NodePgDatabase<typeof schema>;
+
   constructor() {
     this.initDB();
   }
