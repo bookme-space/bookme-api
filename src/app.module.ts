@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 
-import { validate } from "./core/config";
+import { validate } from "@core/config";
 
 @Module({
   imports: [
