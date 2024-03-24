@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
+
+import { PlacesIntity } from '../../domain/entities/places.entity';
 import { PlacesRepository } from '../repositories/places.repository';
 
 @Injectable()
 export class PlacesService {
-  constructor(private readonly placesRepository: PlacesRepository) {}
+  constructor(
+    private readonly placesRepository: PlacesRepository,
+  ) {}
 
   public async getById(id: bigint) {
     return this.placesRepository.getById(id);
@@ -13,7 +17,7 @@ export class PlacesService {
     return this.placesRepository.getAll();
   }
 
-  public async create(place: any) {
+  public async create(place: PlacesIntity) {
     return this.placesRepository.create(place);
   }
 }

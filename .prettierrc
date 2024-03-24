@@ -4,11 +4,14 @@
   "bracketSpacing": true,
   "trailingComma": "all",
   "endOfLine": "auto",
-  "printWidth": 60,
+  "printWidth": 65,
   "tabWidth": 2,
 
   "plugins": ["@trivago/prettier-plugin-sort-imports"],
-  "importOrderParserPlugins": ["typescript"],
+  "importOrderParserPlugins": [
+    "typescript",
+    "decorators-legacy"
+  ],
   "importOrderSortSpecifiers": true,
   "importOrderSeparation": true,
   "importOrder": [

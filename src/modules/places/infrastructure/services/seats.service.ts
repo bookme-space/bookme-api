@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
+
 import { SeatsRepository } from '../repositories/seats.repository';
 
 @Injectable()
 export class SeatsService {
-  constructor(private readonly placesRepository: SeatsRepository) {}
+  constructor(
+    private readonly placesRepository: SeatsRepository,
+  ) {}
 
   public async getById(id: bigint) {
     return this.placesRepository.getById(id);

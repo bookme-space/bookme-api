@@ -3,7 +3,11 @@ export class PlaceTagEntity {
   private readonly name: string;
   private readonly icon: undefined | string;
 
-  constructor(id: bigint, name: string, icon: undefined | string) {
+  constructor(
+    id: bigint,
+    name: string,
+    icon: undefined | string,
+  ) {
     this.id = id;
     this.name = name;
     this.icon = icon;

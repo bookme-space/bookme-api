@@ -1,4 +1,6 @@
 import { Controller, Get, Param, Post } from '@nestjs/common';
+
+import { PlacesIntity } from '../../domain/entities/places.entity';
 import { PlacesService } from '../services/places.service';
 
 @Controller('place')
@@ -15,7 +17,7 @@ export class PlacesController {
   }
 
   @Post()
-  public async create(place: any) {
-    return this.placesService.create(place);
+  public async create(place: unknown) {
+    return this.placesService.create(place as PlacesIntity);
   }
 }

@@ -1,4 +1,5 @@
 import { Controller, Get, Param, Patch } from '@nestjs/common';
+
 import { SeatsService } from '../services/seats.service';
 
 @Controller('seats')

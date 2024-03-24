@@ -1,7 +1,8 @@
-import { DatabaseService } from './database.service';
-import { DATABASE_CONNECTION_KEY } from './database.decorator';
-import { schema } from '../../../database/schema';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+
+import { schema } from '../../../database/schema';
+import { DATABASE_CONNECTION_KEY } from './database.decorator';
+import { DatabaseService } from './database.service';
 
 interface DatabaseModuleOptions {
   isGlobal?: boolean;
@@ -19,7 +20,8 @@ export class DatabaseModule {
           inject: [DatabaseService],
           useFactory: async (
             databaseService: DatabaseService,
-          ): Promise<NodePgDatabase<typeof schema>> => databaseService.DB,
+          ): Promise<NodePgDatabase<typeof schema>> =>
+            databaseService.DB,
         },
       ],
       exports: [DATABASE_CONNECTION_KEY],

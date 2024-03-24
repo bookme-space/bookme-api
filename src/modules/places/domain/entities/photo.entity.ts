@@ -9,7 +9,12 @@ export class PhotoEntity {
   private readonly order: number;
   private readonly sources: Sources;
 
-  constructor(id: bigint, createdAt: Date, order: number, sources: Sources) {
+  constructor(
+    id: bigint,
+    createdAt: Date,
+    order: number,
+    sources: Sources,
+  ) {
     this.id = id;
     this.createdAt = createdAt;
     this.order = order;
