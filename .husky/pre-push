@@ -1,1 +1,1 @@
-echo "Pre push hook"
+npm run test && npm run test:e2e
