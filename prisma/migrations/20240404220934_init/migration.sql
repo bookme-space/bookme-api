@@ -7,6 +7,9 @@ CREATE TYPE "TimeslotStatus" AS ENUM ('Available', 'Booked', 'Taken', 'Inactive'
 -- CreateEnum
 CREATE TYPE "DayOfWeek" AS ENUM ('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
 
+-- CreateEnum
+CREATE TYPE "SourceType" AS ENUM ('Gif', 'Image', 'Video');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
@@ -18,7 +21,7 @@ CREATE TABLE "User" (
     "password" TEXT,
     "nickname" TEXT,
     "avUpdated" TIMESTAMP,
-    "avMimetype" TEXT,
+    "avSrcType" "SourceType",
     "avOriginal" TEXT,
     "avThumbnail" TEXT,
     "lat" DOUBLE PRECISION,
@@ -54,7 +57,7 @@ CREATE TABLE "PlacePhoto" (
     "id" TEXT NOT NULL,
     "created" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "order" INTEGER NOT NULL,
-    "mimetype" TEXT NOT NULL,
+    "srcType" "SourceType" NOT NULL,
     "original" TEXT NOT NULL,
     "thumbnail" TEXT NOT NULL,
     "placeId" TEXT NOT NULL,

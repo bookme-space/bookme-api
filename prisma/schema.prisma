@@ -11,17 +11,17 @@ datasource db {
 // <Domain:User>
 
 model User {
-  id          String    @id @default(uuid())
-  role        UserRole  @default(User)
-  email       String    @unique
+  id          String      @id @default(uuid())
+  role        UserRole    @default(User)
+  email       String      @unique
   firstname   String
   lastname    String
   birthdate   DateTime?
   password    String?
   nickname    String?
   // avatar
-  avUpdated   DateTime? @db.Timestamp
-  avMimetype  String?
+  avUpdated   DateTime?   @db.Timestamp
+  avSrcType   SourceType?
   avOriginal  String?
   avThumbnail String?
   // position
@@ -66,16 +66,16 @@ model PlaceTag {
 }
 
 model PlacePhoto {
-  id        String   @id @default(uuid())
-  created   DateTime @default(now()) @db.Timestamp
+  id        String     @id @default(uuid())
+  created   DateTime   @default(now()) @db.Timestamp
   order     Int
-  mimetype  String
+  srcType   SourceType
   // sources
   original  String
   thumbnail String
   // relations
   placeId   String
-  place     Place    @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  place     Place      @relation(fields: [placeId], references: [id], onDelete: Cascade)
 
   @@unique([placeId, order])
 }
@@ -120,6 +120,12 @@ enum DayOfWeek {
   Thu
   Fri
   Sat
+}
+
+enum SourceType {
+  Gif
+  Image
+  Video
 }
 
 // </Shared>

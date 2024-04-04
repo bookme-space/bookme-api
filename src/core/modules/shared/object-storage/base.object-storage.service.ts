@@ -1,6 +1,6 @@
 export enum Folder {
-  Users = "users",
-  Places = "places",
+  Users,
+  Places,
 }
 
 export interface IUploadOptions {
