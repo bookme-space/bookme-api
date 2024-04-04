@@ -1,30 +1,37 @@
-import { drizzle } from 'drizzle-orm/node-postgres';
-import { NodePgDatabase } from 'drizzle-orm/node-postgres/driver';
-import { Pool } from 'pg';
+import {
+  Injectable,
+  OnModuleDestroy,
+  OnModuleInit,
+} from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 
-import { Injectable } from '@nestjs/common';
+import { RootConfig } from "@core/config";
 
-import { schema } from 'src/database/schema';
-
-const creds = {
-  connectionString:
-    'postgres://postgres:postgres@localhost:5432/test',
-};
+import { ModelName } from "./repository/interfaces";
+import { PrismaRepository } from "./repository/prisma.repository";
+import { ExtendedClient } from "./transactional/client";
 
 @Injectable()
-export class DatabaseService {
-  private db!: NodePgDatabase<typeof schema>;
-
-  constructor() {
-    this.initDB();
+export class DatabaseClient
+  extends ExtendedClient
+  implements OnModuleInit, OnModuleDestroy
+{
+  constructor(config: ConfigService<RootConfig, true>) {
+    const { dbUrl } = config.get("app", { infer: true });
+    super({ datasourceUrl: dbUrl });
   }
 
-  private initDB() {
-    const pool = new Pool(creds);
-    this.db = drizzle(pool);
+  public getRepository<T extends ModelName>(
+    model: T,
+  ): PrismaRepository<T> {
+    return new PrismaRepository<T>(model, this);
   }
 
-  public get DB() {
-    return this.db;
+  public async onModuleInit() {
+    await this.$connect();
+  }
+
+  public async onModuleDestroy() {
+    await this.$disconnect();
   }
 }
