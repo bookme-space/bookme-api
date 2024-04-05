@@ -5,6 +5,6 @@ export enum SourceType {
 }
 
 export interface UnmarshalledSource {
-  original: string;
-  thumbnail: string;
+  readonly original: string;
+  readonly thumbnail: string;
 }
