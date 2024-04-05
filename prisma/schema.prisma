@@ -47,6 +47,10 @@ model Place {
   name        String
   description String
   address     String
+  // preview
+  pvSrcType   SourceType?
+  pvOriginal  String?
+  pvThumbnail String?
   // hours of work
   startAt     DateTime     @db.Time
   endAt       DateTime     @db.Time
@@ -69,8 +73,8 @@ model PlacePhoto {
   id        String     @id @default(uuid())
   created   DateTime   @default(now()) @db.Timestamp
   order     Int
-  srcType   SourceType
   // sources
+  srcType   SourceType
   original  String
   thumbnail String
   // relations
