@@ -2,6 +2,7 @@ import { EntityId, UnmarshalledEntity } from "@core/domain";
 
 import { Nullable } from "@app.types/common";
 
+import { Seat } from "../seat/seat.entity";
 import { PlacePreview } from "./preview.value";
 import { PlaceTimerange } from "./timerange.value";
 
@@ -24,6 +25,7 @@ export type PlaceOptionalProps = Readonly<
   Partial<{
     id: EntityId;
     preview: PlacePreview;
+    seats: Seat[];
   }>
 >;
 

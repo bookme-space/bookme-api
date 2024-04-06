@@ -23,7 +23,6 @@ export abstract class Media extends Entity {
   public get Created(): Date {
     return this.created;
   }
-
   public get Source(): Source {
     return this.source;
   }

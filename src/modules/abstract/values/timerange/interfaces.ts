@@ -8,3 +8,8 @@ export interface ITime {
   readonly hours: number;
   readonly minutes: number;
 }
+
+export interface ITimerange {
+  get StartAt(): ITime;
+  get EndAt(): ITime;
+}

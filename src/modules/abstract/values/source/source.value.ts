@@ -1,6 +1,6 @@
-import { SourceType } from "./interfaces";
+import { ISource, SourceType } from "./interfaces";
 
-export abstract class Source {
+export abstract class Source implements ISource {
   protected readonly type: SourceType;
   protected readonly original: string;
   protected readonly thumbnail: string;
@@ -18,11 +18,9 @@ export abstract class Source {
   public get Type(): SourceType {
     return this.type;
   }
-
   public get Original(): string {
     return this.original;
   }
-
   public get Thumbnail(): string {
     return this.thumbnail;
   }

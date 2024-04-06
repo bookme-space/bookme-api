@@ -1,7 +1,10 @@
-import { Entity } from "@core/domain";
+import { Entity, EntityId } from "@core/domain";
 
 import { Nullable } from "@app.types/common";
 
+import { DomainError } from "src/modules/abstract/throwable";
+
+import { Seat } from "../seat/seat.entity";
 import { PlaceProps } from "./interfaces";
 import { PlacePreview } from "./preview.value";
 import { PlaceTimerange } from "./timerange.value";
@@ -13,6 +16,8 @@ export class Place extends Entity {
   private timerange: PlaceTimerange;
   private preview: Nullable<PlacePreview>;
 
+  private seats?: Seat[];
+
   constructor(props: PlaceProps) {
     super(props.id);
     this.name = props.name;
@@ -20,6 +25,8 @@ export class Place extends Entity {
     this.address = props.address;
     this.timerange = props.timerange;
     this.preview = props.preview ?? null;
+
+    this.seats = props.seats;
   }
 
   public get Name(): string {
@@ -36,5 +43,32 @@ export class Place extends Entity {
   }
   public get Preview(): Nullable<PlacePreview> {
     return this.preview;
+  }
+
+  public get IsSeatsDefined(): boolean {
+    return !Object.is(this.seats, undefined);
+  }
+  public get Seats(): Seat[] {
+    if (!this.IsSeatsDefined)
+      throw new DomainError("Failed to get Place.Seats");
+    return this.seats!;
+  }
+  private set Seats(value: Seat[]) {
+    if (!this.IsSeatsDefined)
+      throw new DomainError("Failed to set Place.Seats");
+    this.seats = value;
+  }
+
+  public AddSeat(seat: Seat): void {
+    this.Seats.push(seat);
+  }
+  public RemoveSeats(ids: EntityId): number {
+    let rmCount = 0;
+    this.Seats = this.Seats.filter(({ Id }) => {
+      const isFound = ids.includes(Id);
+      if (isFound) rmCount++;
+      return !isFound;
+    });
+    return rmCount;
   }
 }

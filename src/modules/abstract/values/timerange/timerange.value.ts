@@ -1,9 +1,9 @@
 import { DomainError } from "../../throwable";
-import { ITime } from "./interfaces";
+import { ITime, ITimerange } from "./interfaces";
 
-export abstract class Timerange {
-  protected start: Date;
-  protected end: Date;
+export abstract class Timerange implements ITimerange {
+  protected readonly start: Date;
+  protected readonly end: Date;
 
   constructor(start: Date, end: Date) {
     if (start.getTime() >= end.getTime())
@@ -29,7 +29,7 @@ export abstract class Timerange {
     };
   }
 
-  public static ToUtc(date: Date): number {
+  protected static ToUtc(date: Date): number {
     return Date.UTC(
       date.getUTCFullYear(),
       date.getUTCMonth(),
