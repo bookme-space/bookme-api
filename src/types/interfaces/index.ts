@@ -1,1 +1,1 @@
-export * from "./is-overlapable";
+export * from "./overlapable";

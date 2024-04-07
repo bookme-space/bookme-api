@@ -1,4 +1,3 @@
-/* eslint @typescript-eslint/no-explicit-any: 0 */
 import { Prisma } from "@prisma/client";
 import { Operation } from "@prisma/client/runtime/library";
 

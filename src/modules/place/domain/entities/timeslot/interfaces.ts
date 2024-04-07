@@ -1,4 +1,4 @@
-import { EntityId } from "@core/domain";
+import { EntityId, UnmarshalledEntity } from "@core/domain";
 
 import { TimeslotRange } from "./timegane.value";
 
@@ -22,3 +22,9 @@ export type TimeslotOptionalProps = Readonly<
 
 export type TimeslotProps = TimeslotEssentialProps &
   TimeslotOptionalProps;
+
+export interface UnmarshalledTimeslot
+  extends UnmarshalledEntity {
+  status: TimeslotStatus;
+  timerange: TimeslotRange;
+}

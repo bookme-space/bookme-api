@@ -1,4 +1,3 @@
-/* eslint @typescript-eslint/no-explicit-any: 0 */
 import { AsyncLocalStorage } from "node:async_hooks";
 
 export abstract class IAls<K = unknown, V = unknown> extends Map<

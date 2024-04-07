@@ -1,4 +1,3 @@
-/* eslint @typescript-eslint/no-explicit-any: 0 */
 import { EmptyObject } from "@app.types/common";
 
 import { Entity } from "../entities/domain.entity";

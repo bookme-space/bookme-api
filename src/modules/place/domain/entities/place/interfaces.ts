@@ -2,6 +2,7 @@ import { EntityId, UnmarshalledEntity } from "@core/domain";
 
 import { Nullable } from "@app.types/common";
 
+import { UnmarshalledSeat } from "../seat/interfaces";
 import { Seat } from "../seat/seat.entity";
 import { PlacePreview } from "./preview.value";
 import { PlaceTimerange } from "./timerange.value";
@@ -10,7 +11,7 @@ export type PlaceInclude = {};
 
 export type PlaceWhere = {};
 
-export type PalceOrder = {};
+export type PlaceOrder = {};
 
 export type PlaceEssentialProps = Readonly<
   Required<{
@@ -38,4 +39,5 @@ export interface UnmarshalledPlace extends UnmarshalledEntity {
   readonly address: string;
   readonly timerange: PlaceTimerange;
   readonly preview: Nullable<PlacePreview>;
+  readonly seats?: UnmarshalledSeat[];
 }

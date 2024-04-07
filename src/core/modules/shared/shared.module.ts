@@ -13,7 +13,7 @@ interface SharedModuleOptions {
 }
 
 export class SharedModule {
-  static forRoot(options?: SharedModuleOptions): DynamicModule {
+  static register(options?: SharedModuleOptions): DynamicModule {
     const isGlobal = options?.isGlobal ?? false;
     const providers = [
       { provide: IAppLogger, useClass: AppLogger },

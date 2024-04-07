@@ -10,7 +10,7 @@ interface AsyncContextModuleConfig {
 }
 
 export class AlsModule {
-  public static forRoot(
+  public static register(
     options?: AsyncContextModuleConfig,
   ): DynamicModule {
     const isGlobal = options?.isGlobal ?? false;
