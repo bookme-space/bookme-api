@@ -23,6 +23,5 @@ const modules = [PlaceModule];
 
 @Module({
   imports: [...infrastructure, ...modules],
-  providers: [],
 })
 export class AppModule {}
