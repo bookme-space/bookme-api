@@ -11,6 +11,7 @@ export interface ISource {
 }
 
 export interface UnmarshalledSource {
+  readonly type: keyof typeof SourceType;
   readonly original: string;
   readonly thumbnail: string;
 }

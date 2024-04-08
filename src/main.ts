@@ -1,5 +1,7 @@
 import cookie from "@fastify/cookie";
 import multipart from "@fastify/multipart";
+import statics from "@fastify/static";
+import path from "node:path";
 
 import { ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
@@ -16,6 +18,13 @@ import { AppModule } from "src/app.module";
 
 import { BootstrapSwagger } from "./swagger/bootstrap";
 
+const isProd = process.env.NODE_ENV == "prod";
+
+const serveStaticOpts = {
+  prefix: "/uploads/",
+  root: path.join(__dirname, "..", "uploads"),
+};
+
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
@@ -29,6 +38,8 @@ async function bootstrap() {
 
   await app.register(cookie);
   await app.register(multipart);
+
+  if (!isProd) await app.register(statics, serveStaticOpts);
 
   app.useLogger(app.get(IAppLogger));
   app.useGlobalPipes(new ValidationPipe({ transform: true }));

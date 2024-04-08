@@ -3,6 +3,9 @@
 .env.*
 !.env.example
 
+# uploads
+/uploads
+
 # compiled output
 /dist
 /node_modules

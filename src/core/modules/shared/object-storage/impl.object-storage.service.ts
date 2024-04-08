@@ -1,4 +1,7 @@
-// import fs from "node:fs/promises";
+import fsSync from "node:fs";
+import fs, { constants } from "node:fs/promises";
+import path from "node:path";
+
 import {
   Folder,
   IObjectStorageService,
@@ -6,14 +9,39 @@ import {
   IUploadResult,
 } from "./base.object-storage.service";
 
-export class ObjectStorageService extends IObjectStorageService {
-  private static readonly UPLOADS_PATH: string = `./uploads`;
+function getAppRootDir() {
+  let dir = __dirname;
+  while (!fsSync.existsSync(path.join(dir, "package.json")))
+    dir = path.join(dir, "..");
+  return dir;
+}
 
-  public override upload(
-    _object: Buffer,
-    _options: IUploadOptions,
+const UPLOADS_FOLDER = "uploads";
+const ROOT_PATH = path.join(getAppRootDir(), UPLOADS_FOLDER);
+
+export class ObjectStorageService extends IObjectStorageService {
+  public override async upload(
+    object: Buffer,
+    { name, folder }: IUploadOptions,
   ): Promise<IUploadResult> {
-    throw new Error("Method not implemented.");
+    const folderName = !Object.is(folder, undefined)
+      ? Folder[folder!].toLowerCase()
+      : null;
+
+    const target = path.join(ROOT_PATH, folderName ?? "");
+
+    const isExists = await fs
+      .access(target, constants.W_OK)
+      .then(() => true)
+      .catch(() => false);
+
+    if (!isExists) await fs.mkdir(target, { recursive: true });
+
+    const filePath = path.join(target, name);
+    await fs.writeFile(filePath, object);
+
+    const uri = `/${path.join(UPLOADS_FOLDER, folderName ?? "", name)}`;
+    return { uri };
   }
 
   public override delete(_key: string): Promise<void> {
