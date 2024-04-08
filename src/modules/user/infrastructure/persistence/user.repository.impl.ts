@@ -1,12 +1,12 @@
 import { BaseRepository } from "@core/infrastructure/persistence/base.repository.impl";
 import { DatabaseClient } from "@core/modules/database";
 
-import { User } from "../../domain/entities/user/user.entity";
 import {
+  User,
   UserInclude,
   UserOrder,
   UserWhere,
-} from "../../domain/entities/user/user.interfaces";
+} from "../../domain/entities";
 import { IUserRepository } from "../../domain/user.repository";
 import { UserMapper } from "./mappers/user.mapper";
 

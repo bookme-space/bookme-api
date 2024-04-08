@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 
+import { UserProps } from "../entities/user/interfaces";
 import { User } from "../entities/user/user.entity";
-import { UserProps } from "../entities/user/user.interfaces";
 
 @Injectable()
 export class UserFactory {

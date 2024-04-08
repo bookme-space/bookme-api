@@ -1,7 +1,9 @@
 import { EntityId, UnmarshalledEntity } from "@core/domain";
 
-import { UnmarshalledPlace } from "../place/interfaces";
-import { Place } from "../place/place.entity";
+import { Nullable } from "@app.types/common";
+
+import { Avatar } from "./avatar.value";
+import { Position } from "./position.value";
 
 export type UserInclude = {};
 
@@ -16,14 +18,8 @@ export enum UserRole {
   PlaceOwner,
 }
 
-export interface Position {
-  latitude: number;
-  longitude: number;
-}
-
 export type UserEssentialProps = Readonly<
   Required<{
-    role: UserRole;
     email: string;
     firstname: string;
     lastname: string;
@@ -33,11 +29,12 @@ export type UserEssentialProps = Readonly<
 export type UserOptionalProps = Readonly<
   Partial<{
     id: EntityId;
+    role: UserRole;
     birthdate: Date;
     password: string;
     nickname: string;
+    avatar: Avatar;
     position: Position;
-    ownedPlaces: Place[];
   }>
 >;
 
@@ -45,12 +42,11 @@ export type UserProps = UserEssentialProps & UserOptionalProps;
 
 export interface UnmarshalledUser extends UnmarshalledEntity {
   readonly role: UserRole;
+  readonly email: string;
   readonly firsname: string;
   readonly lastname: string;
-  readonly email: string;
-  readonly password: string;
-  readonly birthdate: Date;
-  readonly position: Position;
-  readonly nickname: string;
-  readonly ownedPlases?: UnmarshalledPlace[];
+  readonly birthdate?: Date;
+  readonly nickname?: string;
+  readonly avatar: Nullable<Avatar>;
+  readonly position: Nullable<Position>;
 }

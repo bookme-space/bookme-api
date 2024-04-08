@@ -1,15 +1,10 @@
 import { Entity } from "@core/domain";
 
-import { Optional } from "@app.types/common";
+import { Nullable, Optional } from "@app.types/common";
 
-import { DomainError } from "src/modules/abstract/throwable";
-
-import { Place } from "../place/place.entity";
-import {
-  Position,
-  UserProps,
-  UserRole,
-} from "./user.interfaces";
+import { Avatar } from "./avatar.value";
+import { UserProps, UserRole } from "./interfaces";
+import { Position } from "./position.value";
 
 export class User extends Entity {
   private role: UserRole;
@@ -19,20 +14,22 @@ export class User extends Entity {
   private birthdate?: Date;
   private password?: string;
   private nickname?: string;
-  private position?: Position;
-  private ownedPlaces?: Place[];
+  private avatar: Nullable<Avatar>;
+  private position: Nullable<Position>;
 
   constructor(props: UserProps) {
     super(props.id);
-    this.role = props.role;
+    this.role = props.role ?? UserRole.User;
     this.email = props.email;
     this.firstname = props.firstname;
     this.lastname = props.lastname;
+    this.birthdate = props.birthdate;
     this.password = props.password;
     this.nickname = props.nickname;
-    this.position = props.position;
-    this.ownedPlaces = props.ownedPlaces;
+    this.avatar = props.avatar ?? null;
+    this.position = props.position ?? null;
   }
+
   public get Role(): UserRole {
     return this.role;
   }
@@ -54,30 +51,18 @@ export class User extends Entity {
   public get Nickname(): Optional<string> {
     return this.nickname;
   }
-  public get Position(): Optional<Position> {
+  public get Avatar(): Nullable<Avatar> {
+    return this.avatar;
+  }
+  public get Position(): Nullable<Position> {
     return this.position;
   }
-  public get OwnedPlaces(): Optional<Place[]> {
-    return this.ownedPlaces;
-  }
-  public get IsPlacesDefined(): boolean {
-    return !Object.is(this.ownedPlaces, undefined);
-  }
-  public get OwnedPlace(): Place[] {
-    if (!this.IsPlacesDefined)
-      throw new DomainError("Failed to get User.OwnedPlaces");
-    return this.ownedPlaces!;
-  }
-  private set OwnedPlaces(value: Place[]) {
-    if (!this.IsPlacesDefined)
-      throw new DomainError("Failed to set User.OwnedPlaces");
-    this.ownedPlaces = value;
+
+  public SetAvatar(avatar: Nullable<Avatar>): void {
+    this.avatar = avatar;
   }
 
-  public AddOwnedPlaces(value: Place): void {
-    this.OwnedPlace.push(value);
+  public SetPosition(position: Nullable<Position>): void {
+    this.position = position;
   }
 }
-
-//book placeId -> seetId -> timeslot ->  status : Book
-//owner exdents user + ownedPlaces
