@@ -1,6 +1,7 @@
 import cookie from "@fastify/cookie";
 import multipart from "@fastify/multipart";
 
+import { ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import {
@@ -30,7 +31,8 @@ async function bootstrap() {
   await app.register(multipart);
 
   app.useLogger(app.get(IAppLogger));
-  app.setGlobalPrefix(prefix ?? "");
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  if (!!prefix) app.setGlobalPrefix(prefix);
 
   await BootstrapSwagger(app);
   await app.listen(port, "0.0.0.0");

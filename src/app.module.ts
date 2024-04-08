@@ -7,6 +7,7 @@ import { DatabaseModule } from "@core/modules/database";
 import { SharedModule } from "@core/modules/shared/shared.module";
 
 import { PlaceModule } from "./modules/place/place.module";
+import { UploadModule } from "./modules/upload/upload.module";
 
 const infrastructure = [
   ConfigModule.forRoot({
@@ -19,7 +20,7 @@ const infrastructure = [
   DatabaseModule.register({ isGlobal: true }),
 ];
 
-const modules = [PlaceModule];
+const modules = [PlaceModule, UploadModule];
 
 @Module({
   imports: [...infrastructure, ...modules],
