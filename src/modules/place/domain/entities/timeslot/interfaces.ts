@@ -1,5 +1,9 @@
 import { EntityId, UnmarshalledEntity } from "@core/domain";
 
+import { Nullable } from "@app.types/common";
+
+import { UnmarshalledTenant } from "../tenant/interfaces";
+import { Tenant } from "../tenant/tenant.entity";
 import { TimeslotRange } from "./timegane.value";
 
 export enum TimeslotStatus {
@@ -17,7 +21,7 @@ export type TimeslotEssentialProps = Readonly<
 >;
 
 export type TimeslotOptionalProps = Readonly<
-  Partial<{ id: EntityId }>
+  Partial<{ id: EntityId; tenant: Nullable<Tenant> }>
 >;
 
 export type TimeslotProps = TimeslotEssentialProps &
@@ -27,4 +31,5 @@ export interface UnmarshalledTimeslot
   extends UnmarshalledEntity {
   status: keyof typeof TimeslotStatus;
   timerange: TimeslotRange;
+  tenant?: Nullable<UnmarshalledTenant>;
 }

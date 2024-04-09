@@ -10,3 +10,7 @@ export * from "./seat/seat.entity";
 export * from "./timeslot/interfaces";
 export * from "./timeslot/timegane.value";
 export * from "./timeslot/timeslot.entity";
+
+export * from "./tenant/interfaces";
+export * from "./tenant/avatar.value";
+export * from "./tenant/tenant.entity";

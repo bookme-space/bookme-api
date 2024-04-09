@@ -11,16 +11,16 @@ datasource db {
 // <Domain:User>
 
 model User {
-  id          String      @id @default(uuid())
-  role        UserRole    @default(User)
-  email       String      @unique
+  id          String         @id @default(uuid())
+  role        UserRole       @default(User)
+  email       String         @unique
   firstname   String
   lastname    String
   birthdate   DateTime?
   password    String?
   nickname    String?
   // avatar
-  avUpdated   DateTime?   @db.Timestamp
+  avUpdated   DateTime?      @db.Timestamp
   avSrcType   SourceType?
   avOriginal  String?
   avThumbnail String?
@@ -28,6 +28,7 @@ model User {
   lat         Float?
   long        Float?
   // relations
+  timeslots   SeatTimeslot[]
   ownedPlaces Place[]
 }
 
@@ -95,14 +96,16 @@ model PlaceSeat {
 }
 
 model SeatTimeslot {
-  id      String         @id @default(uuid())
-  status  TimeslotStatus @default(Inactive)
-  day     DayOfWeek
-  startAt DateTime       @db.Time
-  endAt   DateTime       @db.Time
+  id       String         @id @default(uuid())
+  status   TimeslotStatus @default(Inactive)
+  day      DayOfWeek
+  startAt  DateTime       @db.Time
+  endAt    DateTime       @db.Time
   // relations
-  seatId  String
-  seat    PlaceSeat      @relation(fields: [seatId], references: [id], onDelete: Cascade)
+  tenantId String?
+  tenant   User?          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  seatId   String
+  seat     PlaceSeat      @relation(fields: [seatId], references: [id], onDelete: Cascade)
 }
 
 enum TimeslotStatus {

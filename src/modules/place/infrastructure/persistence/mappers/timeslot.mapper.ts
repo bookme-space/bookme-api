@@ -16,6 +16,8 @@ import {
 } from "src/modules/place/domain/entities";
 import { TimeslotFactory } from "src/modules/place/domain/factories/timeslot.factory";
 
+import { TenantMapper } from "./tenant.mapper";
+
 type ITimeslotPersistenceUpsert = {
   [PersistType.Create]: Prisma.SeatTimeslotCreateWithoutSeatInput;
   [PersistType.Update]: Prisma.SeatTimeslotUpdateWithoutSeatInput;
@@ -26,7 +28,10 @@ export class TimeslotMapper extends IBaseMapper<
   Timeslot,
   UnmarshalledTimeslot
 > {
-  constructor(private readonly factory: TimeslotFactory) {
+  constructor(
+    private readonly factory: TimeslotFactory,
+    private tenantMapper: TenantMapper,
+  ) {
     super();
   }
 
@@ -49,12 +54,15 @@ export class TimeslotMapper extends IBaseMapper<
         raw.endAt,
         DayOfWeek[raw.day] as any,
       ),
+      tenant: !Object.is(raw.tenant, undefined)
+        ? raw.tenant && this.tenantMapper.toDomain(raw.tenant)
+        : undefined,
     });
   }
 
   public override toPersistence<T extends PersistType>(
     entity: Timeslot,
-    _?: T,
+    type?: T,
   ): ITimeslotPersistenceUpsert[T] {
     return {
       id: entity.Id,
@@ -62,14 +70,32 @@ export class TimeslotMapper extends IBaseMapper<
       day: DayOfWeek[entity.Timerange.Day] as any,
       startAt: new Date(entity.Timerange.StartAt.timestamp),
       endAt: new Date(entity.Timerange.EndAt.timestamp),
+      ...(entity.IsTenantDefined && {
+        tenant: {
+          ...(type == PersistType.Create &&
+            entity.Tenant && {
+              connect: { id: entity.Tenant.Id },
+            }),
+          ...(type == PersistType.Update && {
+            ...(!Object.is(entity.Tenant, null)
+              ? { disconnect: true }
+              : { connect: { id: entity.Tenant?.Id } }),
+          }),
+        },
+      }),
     };
   }
 
   public override toDto(entity: Timeslot): UnmarshalledTimeslot {
     return {
       id: entity.Id,
-      status: entity.Status,
+      status: TimeslotStatus[
+        entity.Status
+      ] as keyof typeof TimeslotStatus,
       timerange: entity.Timerange,
+      tenant: entity.IsTenantDefined
+        ? entity.Tenant && this.tenantMapper.toDto(entity.Tenant)
+        : undefined,
     };
   }
 }

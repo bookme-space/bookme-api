@@ -44,5 +44,5 @@ docker run -d \
   -e POSTGRES_DB=bookme.db.local \
   -e POSTGRES_PASSWORD=root \
   -e POSTGRES_USER=user \
-  -p 5432:5432 postgres
+  -p 3080:5432 postgres
 ```
