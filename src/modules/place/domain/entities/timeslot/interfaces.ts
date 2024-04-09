@@ -25,6 +25,6 @@ export type TimeslotProps = TimeslotEssentialProps &
 
 export interface UnmarshalledTimeslot
   extends UnmarshalledEntity {
-  status: TimeslotStatus;
+  status: keyof typeof TimeslotStatus;
   timerange: TimeslotRange;
 }

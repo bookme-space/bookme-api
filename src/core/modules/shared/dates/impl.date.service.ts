@@ -1,19 +1,21 @@
+import ms from "ms";
+
 import { IDateService } from "./base.date.service";
 
 export class DateService extends IDateService {
   public ms(value: number, options?: { long: boolean }): string;
   public ms(value: string): number;
   public ms(
-    _value: number | string,
-    _options?: { long: boolean },
+    value: any,
+    options?: { long: boolean },
   ): string | number {
-    throw new Error("Method not implemented.");
+    return ms(value, options);
   }
 
-  public override end(
-    _duration: string,
-    _startDate?: Date | undefined,
-  ): Date {
-    throw new Error("Method not implemented.");
+  public override end(duration: string, startDate?: Date): Date {
+    const now = Date.now();
+    return new Date(
+      (startDate?.getTime() ?? now) + this.ms(duration),
+    );
   }
 }

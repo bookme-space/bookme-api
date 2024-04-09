@@ -41,12 +41,12 @@ export type UserOptionalProps = Readonly<
 export type UserProps = UserEssentialProps & UserOptionalProps;
 
 export interface UnmarshalledUser extends UnmarshalledEntity {
-  readonly role: UserRole;
+  readonly role: keyof typeof UserRole;
   readonly email: string;
-  readonly firsname: string;
+  readonly firstname: string;
   readonly lastname: string;
-  readonly birthdate?: Date;
-  readonly nickname?: string;
+  readonly birthdate: Nullable<Date>;
+  readonly nickname: Nullable<string>;
   readonly avatar: Nullable<Avatar>;
   readonly position: Nullable<Position>;
 }

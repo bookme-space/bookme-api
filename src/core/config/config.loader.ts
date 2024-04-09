@@ -8,4 +8,14 @@ export const load = (config: IEnvVarialbes) => ({
     dbUrl: config.DATABASE_URL,
     logLevels: config.LOG_LEVELS,
   },
+  auth: {
+    access: {
+      secret: config.JWT_ACCESS_SECRET,
+      expiresIn: config.JWT_ACCESS_EXPIRES_IN,
+    },
+    refresh: {
+      secret: config.JWT_REFRESH_SECRET,
+      expiresIn: config.JWT_REFRESH_EXPIRES_IN,
+    },
+  },
 });

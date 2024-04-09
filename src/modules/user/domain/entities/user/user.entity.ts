@@ -1,6 +1,6 @@
 import { Entity } from "@core/domain";
 
-import { Nullable, Optional } from "@app.types/common";
+import { Nullable } from "@app.types/common";
 
 import { Avatar } from "./avatar.value";
 import { UserProps, UserRole } from "./interfaces";
@@ -11,9 +11,9 @@ export class User extends Entity {
   private email: string;
   private firstname: string;
   private lastname: string;
-  private birthdate?: Date;
-  private password?: string;
-  private nickname?: string;
+  private birthdate: Nullable<Date>;
+  private password: Nullable<string>;
+  private nickname: Nullable<string>;
   private avatar: Nullable<Avatar>;
   private position: Nullable<Position>;
 
@@ -23,9 +23,9 @@ export class User extends Entity {
     this.email = props.email;
     this.firstname = props.firstname;
     this.lastname = props.lastname;
-    this.birthdate = props.birthdate;
-    this.password = props.password;
-    this.nickname = props.nickname;
+    this.birthdate = props.birthdate ?? null;
+    this.password = props.password ?? null;
+    this.nickname = props.nickname ?? null;
     this.avatar = props.avatar ?? null;
     this.position = props.position ?? null;
   }
@@ -42,13 +42,13 @@ export class User extends Entity {
   public get Lastname(): string {
     return this.lastname;
   }
-  public get Birthdate(): Optional<Date> {
+  public get Birthdate(): Nullable<Date> {
     return this.birthdate;
   }
-  public get Password(): Optional<string> {
+  public get Password(): Nullable<string> {
     return this.password;
   }
-  public get Nickname(): Optional<string> {
+  public get Nickname(): Nullable<string> {
     return this.nickname;
   }
   public get Avatar(): Nullable<Avatar> {

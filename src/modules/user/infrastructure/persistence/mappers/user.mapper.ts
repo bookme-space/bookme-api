@@ -25,6 +25,10 @@ type IUserPersistenceUpsert = {
   [PersistType.Update]: Prisma.UserUpdateInput;
 };
 
+type IUserPersistenceInclude = Prisma.UserInclude;
+
+type IUserPersistenceWhere = Prisma.UserWhereInput;
+
 @Injectable()
 export class UserMapper extends IBaseMapper<
   User,
@@ -37,14 +41,18 @@ export class UserMapper extends IBaseMapper<
     super();
   }
 
-  public override toInclude(include: UserInclude): unknown {
+  public override toInclude(
+    include: UserInclude,
+  ): IUserPersistenceInclude {
     return include;
   }
-  public override toWhere(where: UserWhere): unknown {
+  public override toWhere(
+    where: UserWhere,
+  ): IUserPersistenceWhere {
     return where;
   }
-  public override toOrder(order: UserOrder): unknown {
-    return order;
+  public override toOrder(_: UserOrder): unknown {
+    throw new Error("Method not implemented.");
   }
 
   public override toDomain(raw: any): User {
@@ -85,6 +93,7 @@ export class UserMapper extends IBaseMapper<
       firstname: entity.Firstname,
       lastname: entity.Lastname,
       birthdate: entity.Birthdate,
+      password: entity.Password,
       nickname: entity.Nickname,
       ...(entity.Avatar && {
         avUpdated: entity.Avatar.UpdatedAt,
@@ -102,9 +111,9 @@ export class UserMapper extends IBaseMapper<
   public override toDto(entity: User): UnmarshalledUser {
     return {
       id: entity.Id,
-      role: entity.Role,
+      role: UserRole[entity.Role] as keyof typeof UserRole,
       email: entity.Email,
-      firsname: entity.Firstname,
+      firstname: entity.Firstname,
       lastname: entity.Lastname,
       birthdate: entity.Birthdate,
       nickname: entity.Nickname,

@@ -4,7 +4,12 @@ import {
   Query,
   UseGuards,
 } from "@nestjs/common";
-import { ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiTags,
+} from "@nestjs/swagger";
 
 import { UploadedFile } from "@core/decorators/uploaded-file";
 import { UploadGuard } from "@core/infrastructure/guards/upload.guard";
@@ -14,9 +19,9 @@ import {
 } from "@core/infrastructure/pipes/image.sharp.pipe";
 
 import { UploadService } from "./application/services/upload.service";
-import { UploadFileDto } from "./dtos/upload-file.dto";
-import { UploadFileQueryDto } from "./dtos/upload-file.query.dto";
+import { UploadFileDto, UploadFileQueryDto } from "./dtos";
 
+@ApiBearerAuth()
 @ApiTags("uploads")
 @Controller("uploads")
 export class UploadController {
@@ -26,7 +31,7 @@ export class UploadController {
   @ApiBody({ type: UploadFileDto })
   @Post("upload-file")
   @UseGuards(UploadGuard)
-  async upload(
+  public async upload(
     @UploadedFile(ImageSharpPipe) shapes: FileShapes,
     @Query() { folder }: UploadFileQueryDto,
   ) {
