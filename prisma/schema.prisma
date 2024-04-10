@@ -88,7 +88,7 @@ model PlacePhoto {
 model PlaceSeat {
   id        String         @id @default(uuid())
   name      String?
-  capaciry  Int
+  capacity  Int
   // relations
   placeId   String
   place     Place          @relation(fields: [placeId], references: [id], onDelete: Cascade)

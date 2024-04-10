@@ -2,9 +2,11 @@ import { EntityId, UnmarshalledEntity } from "@core/domain";
 
 import { Nullable } from "@app.types/common";
 
+import { UnmarshalledTimerange } from "src/modules/abstract/values";
+
 import { UnmarshalledTenant } from "../tenant/interfaces";
 import { Tenant } from "../tenant/tenant.entity";
-import { TimeslotRange } from "./timegane.value";
+import { DayOfWeek, TimeslotRange } from "./timegane.value";
 
 export enum TimeslotStatus {
   Available,
@@ -30,6 +32,8 @@ export type TimeslotProps = TimeslotEssentialProps &
 export interface UnmarshalledTimeslot
   extends UnmarshalledEntity {
   status: keyof typeof TimeslotStatus;
-  timerange: TimeslotRange;
+  timerange: UnmarshalledTimerange & {
+    day: keyof typeof DayOfWeek;
+  };
   tenant?: Nullable<UnmarshalledTenant>;
 }

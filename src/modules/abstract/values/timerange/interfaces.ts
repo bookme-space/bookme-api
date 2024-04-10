@@ -1,6 +1,6 @@
 export interface UnmarshalledTimerange {
-  readonly start: Date;
-  readonly end: Date;
+  readonly start: ITime;
+  readonly end: ITime;
 }
 
 export interface ITime {

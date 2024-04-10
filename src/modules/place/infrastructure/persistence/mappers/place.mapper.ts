@@ -26,6 +26,10 @@ type IPlacePersistenceUpsert = {
   [PersistType.Update]: Prisma.PlaceUpdateInput;
 };
 
+type IPlacePersistenceInclude = Prisma.PlaceInclude;
+
+type IPlacePersistenceWhere = Prisma.PlaceWhereInput;
+
 @Injectable()
 export class PlaceMapper extends IBaseMapper<
   Place,
@@ -41,11 +45,49 @@ export class PlaceMapper extends IBaseMapper<
     super();
   }
 
-  public override toInclude(include: PlaceInclude): unknown {
-    return include;
+  public override toInclude(
+    include: PlaceInclude,
+  ): IPlacePersistenceInclude {
+    const { seats } = include;
+
+    return {
+      seats:
+        typeof seats == "boolean"
+          ? seats
+          : {
+              ...(typeof seats.timeslots != "boolean" &&
+                typeof seats.timeslots.tenant == "string" && {
+                  where: {
+                    timeslots: {
+                      some: { tenantId: seats.timeslots.tenant },
+                    },
+                  },
+                }),
+              include: {
+                timeslots:
+                  typeof seats.timeslots == "boolean"
+                    ? seats.timeslots
+                    : {
+                        include: {
+                          tenant: Boolean(
+                            seats.timeslots.tenant,
+                          ),
+                        },
+                      },
+              },
+            },
+    };
   }
-  public override toWhere(where: PlaceWhere): unknown {
-    return where;
+  public override toWhere(
+    where: PlaceWhere,
+  ): IPlacePersistenceWhere {
+    return {
+      seats: {
+        some: {
+          timeslots: { some: { tenantId: where.tenant } },
+        },
+      },
+    };
   }
   public override toOrder(order: PlaceOrder): unknown {
     return order;
@@ -124,7 +166,10 @@ export class PlaceMapper extends IBaseMapper<
       name: entity.Name,
       description: entity.Description,
       address: entity.Address,
-      timerange: entity.Timerange,
+      timerange: {
+        start: entity.Timerange.StartAt,
+        end: entity.Timerange.EndAt,
+      },
       preview: entity.Preview,
       seats: entity.IsSeatsDefined
         ? entity.Seats.map((x) => this.seatMapper.toDto(x))

@@ -61,7 +61,7 @@ export class SeatMapper extends IBaseMapper<
     return {
       id: entity.Id,
       name: entity.Name,
-      capaciry: entity.Capacity.valueOf(),
+      capacity: entity.Capacity.valueOf(),
       ...(entity.IsTimeslotsDefined && {
         timeslots: {
           ...(type == PersistType.Create && {

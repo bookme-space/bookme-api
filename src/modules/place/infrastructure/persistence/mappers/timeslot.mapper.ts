@@ -92,7 +92,13 @@ export class TimeslotMapper extends IBaseMapper<
       status: TimeslotStatus[
         entity.Status
       ] as keyof typeof TimeslotStatus,
-      timerange: entity.Timerange,
+      timerange: {
+        day: DayOfWeek[
+          entity.Timerange.Day
+        ] as keyof typeof DayOfWeek,
+        start: entity.Timerange.StartAt,
+        end: entity.Timerange.EndAt,
+      },
       tenant: entity.IsTenantDefined
         ? entity.Tenant && this.tenantMapper.toDto(entity.Tenant)
         : undefined,

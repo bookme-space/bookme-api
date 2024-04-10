@@ -5,7 +5,9 @@ import { JwtModule, JwtService } from "@nestjs/jwt";
 import { RootConfig } from "@core/config";
 import { DatabaseClient } from "@core/modules/database";
 
+import { PlaceModule } from "../place/place.module";
 import { AuthService } from "./application/services/auth.service";
+import { ProfileService } from "./application/services/profile.service";
 import { AuthController } from "./auth.controller";
 import { IJwtService } from "./domain/adapters";
 import { UserFactory } from "./domain/factories/user.factory";
@@ -13,6 +15,7 @@ import { IUserRepository } from "./domain/user.repository";
 import { UserMapper } from "./infrastructure/persistence/mappers/user.mapper";
 import { UserRepositoryImpl } from "./infrastructure/persistence/user.repository.impl";
 import { JwtServiceImplementation } from "./infrastructure/services";
+import { ProfileController } from "./profile.controller";
 
 const infrastructure = [
   UserMapper,
@@ -32,18 +35,18 @@ const infrastructure = [
   },
 ];
 
-const application = [AuthService];
+const application = [AuthService, ProfileService];
 
 const domain = [UserFactory];
 
 @Module({
   imports: [
+    PlaceModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService<RootConfig, true>) => {
         const { access } = config.get("auth", { infer: true });
-
         return {
           secret: access.secret,
           signOptions: { expiresIn: access.expiresIn },
@@ -52,7 +55,7 @@ const domain = [UserFactory];
     }),
   ],
   providers: [...infrastructure, ...application, ...domain],
-  controllers: [AuthController],
+  controllers: [AuthController, ProfileController],
   exports: [IUserRepository, IJwtService],
 })
 export class UserModule {}
