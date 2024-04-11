@@ -29,6 +29,7 @@
 
     "paths": {
       "@core/*": ["src/core/*"],
+      "@swagger/*": ["src/swagger/*"],
       "@app.types/*": ["src/types/*"]
     }
   }

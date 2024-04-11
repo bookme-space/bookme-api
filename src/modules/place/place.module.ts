@@ -12,6 +12,7 @@ import { SeatMapper } from "./infrastructure/persistence/mappers/seat.mapper";
 import { TenantMapper } from "./infrastructure/persistence/mappers/tenant.mapper";
 import { TimeslotMapper } from "./infrastructure/persistence/mappers/timeslot.mapper";
 import { PlaceRepositoryImpl } from "./infrastructure/persistence/place.repository.impl";
+import { PlaceController } from "./place.controller";
 
 const infrastructure = [
   PlaceMapper,
@@ -35,6 +36,7 @@ const domain = [
 
 @Module({
   providers: [...infrastructure, ...domain],
+  controllers: [PlaceController],
   exports: [IPlaceRepository, PlaceMapper],
 })
 export class PlaceModule {}

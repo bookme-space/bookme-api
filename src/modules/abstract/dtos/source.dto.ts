@@ -1,6 +1,13 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ToApiEnum } from "@swagger/api.properties";
+import { Transform } from "class-transformer";
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from "class-validator";
 
-import { ToApiEnum } from "@core/base.dtos";
+import { ApiProperty } from "@nestjs/swagger";
 
 import { SourceType, UnmarshalledSource } from "../values";
 
@@ -12,5 +19,23 @@ export class SourceDto implements UnmarshalledSource {
   readonly original!: string;
 
   @ApiProperty({ type: String })
+  readonly thumbnail!: string;
+}
+
+export class CreateSourceDto {
+  @ApiProperty({ enum: ToApiEnum(SourceType), required: false })
+  @IsOptional()
+  @IsEnum(SourceType)
+  @Transform(({ value }) => SourceType[value])
+  readonly type?: SourceType;
+
+  @ApiProperty({ type: String })
+  @IsString()
+  @IsNotEmpty()
+  readonly original!: string;
+
+  @ApiProperty({ type: String })
+  @IsString()
+  @IsNotEmpty()
   readonly thumbnail!: string;
 }

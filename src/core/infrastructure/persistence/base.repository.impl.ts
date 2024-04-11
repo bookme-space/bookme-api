@@ -4,6 +4,7 @@ import {
   PersistType,
 } from "@core/domain/abstract/base.mapper";
 import {
+  CountOptions,
   FindByIdOptions,
   FindOneOptions,
   FindOptions,
@@ -33,6 +34,16 @@ export class BaseRepository<
     >,
     protected readonly db: DatabaseClient,
   ) {}
+
+  public async count(
+    opts?: CountOptions<Where>,
+  ): Promise<number> {
+    const where = opts?.where && this.mapper.toWhere(opts.where);
+    return this.db
+      .getRepository(this.model)
+      .count({ where } as any)
+      .then((res) => Number(res));
+  }
 
   public async find(
     opts?: FindOptions<Include, Where, Order>,

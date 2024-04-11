@@ -1,8 +1,9 @@
 import { UserRole } from "@prisma/client";
+import { ToApiEnum } from "@swagger/api.properties";
 
 import { ApiProperty } from "@nestjs/swagger";
 
-import { EntityDto, ToApiEnum } from "@core/base.dtos";
+import { EntityDto } from "@core/base.dtos";
 
 import { Nullable } from "@app.types/common";
 

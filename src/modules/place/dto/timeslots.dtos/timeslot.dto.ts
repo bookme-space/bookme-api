@@ -1,9 +1,13 @@
+import { DayOfWeek } from "@prisma/client";
+import { ToApiEnum } from "@swagger/api.properties";
+
 import { ApiProperty } from "@nestjs/swagger";
 
-import { EntityDto, ToApiEnum } from "@core/base.dtos";
+import { EntityDto } from "@core/base.dtos";
+
+import { UnmarshalledTimerange } from "src/modules/abstract/values";
 
 import {
-  TimeslotRange,
   TimeslotStatus,
   UnmarshalledTimeslot,
 } from "../../domain/entities";
@@ -17,5 +21,7 @@ export class TimeslotDto
   readonly status!: keyof typeof TimeslotStatus;
 
   @ApiProperty({ type: TimeslotRangeDto })
-  readonly timerange!: TimeslotRange;
+  readonly timerange!: UnmarshalledTimerange & {
+    day: keyof typeof DayOfWeek;
+  };
 }

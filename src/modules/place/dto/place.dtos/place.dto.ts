@@ -6,10 +6,10 @@ import { Nullable } from "@app.types/common";
 
 import { SourceDto } from "src/modules/abstract/dtos";
 import { TimerangeDto } from "src/modules/abstract/dtos/timerange.dto";
+import { UnmarshalledTimerange } from "src/modules/abstract/values";
 
 import {
   PlacePreview,
-  PlaceTimerange,
   UnmarshalledPlace,
 } from "../../domain/entities";
 
@@ -27,7 +27,7 @@ export class PlaceDto
   readonly address!: string;
 
   @ApiProperty({ type: TimerangeDto })
-  readonly timerange!: PlaceTimerange;
+  readonly timerange!: UnmarshalledTimerange;
 
   @ApiProperty({ type: SourceDto })
   readonly preview!: Nullable<PlacePreview>;

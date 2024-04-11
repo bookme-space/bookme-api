@@ -1,9 +1,13 @@
-import { Controller, Get } from "@nestjs/common";
+import { ApiPagination } from "@swagger/api.properties";
+
+import { Controller, Get, Query } from "@nestjs/common";
 import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiTags,
 } from "@nestjs/swagger";
+
+import { PagingQueryDto } from "@core/base.dtos";
 
 import { PlaceFullDto } from "../place/dto/place.dtos/place.full.dto";
 import { PlaceMapper } from "../place/infrastructure/persistence/mappers/place.mapper";
@@ -29,13 +33,18 @@ export class ProfileController {
       .then((user) => this.mapper.toDto(user));
   }
 
-  @ApiOkResponse({ type: [PlaceFullDto] })
+  @ApiPagination(PlaceFullDto)
   @Get("reservations")
-  public async getReservations() {
+  public async getReservations(
+    @Query() { take, skip }: PagingQueryDto,
+  ) {
     return this.service
-      .getReservations()
-      .then((res) =>
-        res.map((place) => this.placeMapper.toDto(place)),
-      );
+      .getReservations({ take, skip })
+      .then((res) => ({
+        ...res,
+        items: res.items.map((place) =>
+          this.placeMapper.toDto(place),
+        ),
+      }));
   }
 }

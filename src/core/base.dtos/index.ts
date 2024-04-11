@@ -1,2 +1,2 @@
 export * from "./entity.dto";
-export * from "./utils/api.enum";
+export * from "./paging.dto";

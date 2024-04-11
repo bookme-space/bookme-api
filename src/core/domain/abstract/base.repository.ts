@@ -2,6 +2,12 @@ import { Entity, EntityId } from "@core/domain";
 
 import { EmptyObject } from "@app.types/common";
 
+export interface CountOptions<
+  Where extends Record<PropertyKey, unknown>,
+> {
+  where?: Where;
+}
+
 export interface FindOptions<
   Include extends Record<PropertyKey, unknown>,
   Where extends Record<PropertyKey, unknown>,
@@ -37,6 +43,10 @@ export abstract class IBaseRepository<
   Where extends Record<PropertyKey, unknown> = EmptyObject,
   Order extends Record<PropertyKey, unknown> = EmptyObject,
 > {
+  public abstract count(
+    opts?: CountOptions<Where>,
+  ): Promise<number>;
+
   public abstract find(
     opts?: FindOptions<Include, Where, Order>,
   ): Promise<T[]>;

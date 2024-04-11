@@ -1,6 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ToApiEnum } from "@swagger/api.properties";
 
-import { ToApiEnum } from "@core/base.dtos";
+import { ApiProperty } from "@nestjs/swagger";
 
 import { TimerangeDto } from "src/modules/abstract/dtos/timerange.dto";
 
