@@ -99,6 +99,7 @@ export class PlaceMapper extends IBaseMapper<
       name: raw.name,
       description: raw.description,
       address: raw.address,
+      owner: raw.ownerId,
       timerange: new PlaceTimerange(raw.startAt, raw.endAt),
       preview: new PlacePreview(
         SourceType[raw.pvSrcType] as any,
@@ -127,7 +128,7 @@ export class PlaceMapper extends IBaseMapper<
       }),
       startAt: new Date(entity.Timerange.StartAt.timestamp),
       endAt: new Date(entity.Timerange.EndAt.timestamp),
-      owner: { connect: { id: "" } }, // todo (WARN)
+      owner: { connect: { id: entity.Owner } },
       ...(entity.IsSeatsDefined && {
         seats: {
           ...(type == PersistType.Create && {

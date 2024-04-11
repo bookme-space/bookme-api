@@ -1,4 +1,5 @@
-import { IsDateString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsDate } from "class-validator";
 
 import { ApiProperty } from "@nestjs/swagger";
 
@@ -13,12 +14,21 @@ export class TimerangeDto implements UnmarshalledTimerange {
   readonly end!: ITime;
 }
 
-export class CreateTimerangeDto {
+export interface ICraeteTimerangeParams {
+  readonly start: Date;
+  readonly end: Date;
+}
+
+export class CreateTimerangeDto
+  implements ICraeteTimerangeParams
+{
   @ApiProperty({ type: Date })
-  @IsDateString()
+  @IsDate()
+  @Type(() => Date)
   readonly start!: Date;
 
   @ApiProperty({ type: Date })
-  @IsDateString()
+  @IsDate()
+  @Type(() => Date)
   readonly end!: Date;
 }

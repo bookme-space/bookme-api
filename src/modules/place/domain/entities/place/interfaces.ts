@@ -25,6 +25,7 @@ export type PlaceEssentialProps = Readonly<
   Required<{
     name: string;
     description: string;
+    owner: EntityId;
     address: string;
     timerange: PlaceTimerange;
   }>

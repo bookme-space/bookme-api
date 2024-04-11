@@ -7,7 +7,9 @@ import {
 
 import { ApiProperty } from "@nestjs/swagger";
 
-export class RegisterDto {
+import { IRegisterParams } from "../../application/services/auth.service";
+
+export class RegisterDto implements IRegisterParams {
   @ApiProperty({ type: String, example: "user@gmail.com" })
   @IsString()
   @IsEmail()

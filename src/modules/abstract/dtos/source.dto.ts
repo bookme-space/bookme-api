@@ -22,12 +22,18 @@ export class SourceDto implements UnmarshalledSource {
   readonly thumbnail!: string;
 }
 
-export class CreateSourceDto {
+export interface ICreateSourceParms {
+  readonly type: SourceType;
+  readonly original: string;
+  readonly thumbnail: string;
+}
+
+export class CreateSourceDto implements ICreateSourceParms {
   @ApiProperty({ enum: ToApiEnum(SourceType), required: false })
   @IsOptional()
   @IsEnum(SourceType)
   @Transform(({ value }) => SourceType[value])
-  readonly type?: SourceType;
+  readonly type!: SourceType;
 
   @ApiProperty({ type: String })
   @IsString()

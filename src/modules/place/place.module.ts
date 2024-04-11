@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 
 import { DatabaseClient } from "@core/modules/database";
 
+import { PlaceService } from "./application/services/place.service";
 import { PlaceFactory } from "./domain/factories/place.factory";
 import { SeatFactory } from "./domain/factories/seat.factory";
 import { TenantFactory } from "./domain/factories/tenant.factory";
@@ -27,6 +28,8 @@ const infrastructure = [
   },
 ];
 
+const application = [PlaceService];
+
 const domain = [
   PlaceFactory,
   SeatFactory,
@@ -35,7 +38,7 @@ const domain = [
 ];
 
 @Module({
-  providers: [...infrastructure, ...domain],
+  providers: [...infrastructure, ...application, ...domain],
   controllers: [PlaceController],
   exports: [IPlaceRepository, PlaceMapper],
 })

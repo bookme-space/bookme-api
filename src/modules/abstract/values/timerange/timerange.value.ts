@@ -6,7 +6,7 @@ export abstract class Timerange implements ITimerange {
   protected readonly end: Date;
 
   constructor(start: Date, end: Date) {
-    if (start.getTime() >= end.getTime())
+    if (start.getTime() > end.getTime())
       throw new DomainError("Invalid Timerange");
 
     this.start = start;

@@ -15,6 +15,7 @@ export class Place extends Entity {
   private address: string;
   private timerange: PlaceTimerange;
   private preview: Nullable<PlacePreview>;
+  private readonly owner: EntityId;
 
   private seats?: Seat[];
 
@@ -25,6 +26,7 @@ export class Place extends Entity {
     this.address = props.address;
     this.timerange = props.timerange;
     this.preview = props.preview ?? null;
+    this.owner = props.owner;
 
     this.seats = props.seats;
   }
@@ -43,6 +45,9 @@ export class Place extends Entity {
   }
   public get Preview(): Nullable<PlacePreview> {
     return this.preview;
+  }
+  public get Owner(): EntityId {
+    return this.owner;
   }
 
   public get IsSeatsDefined(): boolean {

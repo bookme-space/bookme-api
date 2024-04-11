@@ -7,7 +7,9 @@ import {
 
 import { ApiProperty } from "@nestjs/swagger";
 
-export class LoginDto {
+import { ILoginParams } from "../../application/services/auth.service";
+
+export class LoginDto implements ILoginParams {
   @ApiProperty({ type: String, example: "user@gmail.com" })
   @IsString()
   @IsEmail()
