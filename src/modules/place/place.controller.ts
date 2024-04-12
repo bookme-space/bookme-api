@@ -27,7 +27,6 @@ import { CreatePlaceDto } from "./dto/place.dtos/create.place.dto";
 import { PlaceFullDto } from "./dto/place.dtos/place.full.dto";
 import { PlaceMapper } from "./infrastructure/persistence/mappers/place.mapper";
 import { SeatMapper } from "./infrastructure/persistence/mappers/seat.mapper";
-import { TimeslotMapper } from "./infrastructure/persistence/mappers/timeslot.mapper";
 
 @ApiBearerAuth()
 @ApiTags("places")
@@ -37,7 +36,6 @@ export class PlaceController {
     private readonly service: PlaceService,
     private readonly mapper: PlaceMapper,
     private readonly seatMapper: SeatMapper,
-    private readonly timeslotMapper: TimeslotMapper,
     private readonly als: IAls,
   ) {}
 
@@ -80,5 +78,26 @@ export class PlaceController {
     return this.service
       .create(body)
       .then((place) => this.mapper.toDto(place));
+  }
+
+  @ApiParam({ name: "timeslotId", type: String, required: true })
+  @ApiParam({ name: "seatId", type: String, required: true })
+  @ApiParam({ name: "placeId", type: String, required: true })
+  @Post("book/:placeId/seat/:seatId/timeslot/:timeslotId")
+  public async book(
+    @Param("placeId", ParseUUIDPipe) placeId: EntityId,
+    @Param("seatId") seatId: EntityId,
+    @Param("timeslotId") timeslotId: EntityId,
+  ) {
+    const { id: tenantId } = this.als.get(
+      "user",
+    ) as ITokenPayload;
+
+    return this.service.bookTimeslot({
+      tenantId,
+      placeId,
+      seatId,
+      timeslotId,
+    });
   }
 }

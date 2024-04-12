@@ -44,7 +44,7 @@ export class Timeslot extends Entity implements Overlapable {
   }
 
   public ToBooked(user: Tenant): void {
-    if (this.Status == TimeslotStatus.Inactive)
+    if (this.Status != TimeslotStatus.Available)
       throw new DomainError("Invalid status");
 
     this.Tenant = user;

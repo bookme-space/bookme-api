@@ -77,7 +77,7 @@ export class TimeslotMapper extends IBaseMapper<
               connect: { id: entity.Tenant.Id },
             }),
           ...(type == PersistType.Update && {
-            ...(!Object.is(entity.Tenant, null)
+            ...(Object.is(entity.Tenant, null)
               ? { disconnect: true }
               : { connect: { id: entity.Tenant?.Id } }),
           }),

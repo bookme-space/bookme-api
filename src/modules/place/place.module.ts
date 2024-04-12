@@ -1,7 +1,8 @@
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 
 import { DatabaseClient } from "@core/modules/database";
 
+import { UserModule } from "../user/user.module";
 import { PlaceService } from "./application/services/place.service";
 import { PlaceFactory } from "./domain/factories/place.factory";
 import { SeatFactory } from "./domain/factories/seat.factory";
@@ -38,6 +39,7 @@ const domain = [
 ];
 
 @Module({
+  imports: [forwardRef(() => UserModule)],
   providers: [...infrastructure, ...application, ...domain],
   controllers: [PlaceController],
   exports: [IPlaceRepository, PlaceMapper],

@@ -7,8 +7,10 @@ import { Transactional } from "@core/modules/database";
 
 import { ICreateSourceParms } from "src/modules/abstract/dtos";
 import { ICraeteTimerangeParams } from "src/modules/abstract/dtos/timerange.dto";
+import { DomainError } from "src/modules/abstract/throwable";
 import { Timerange } from "src/modules/abstract/values";
 import { ITokenPayload } from "src/modules/user/domain/adapters";
+import { IUserRepository } from "src/modules/user/domain/user.repository";
 
 import {
   DayOfWeek,
@@ -21,6 +23,7 @@ import {
 } from "../../domain/entities";
 import { PlaceFactory } from "../../domain/factories/place.factory";
 import { SeatFactory } from "../../domain/factories/seat.factory";
+import { TenantFactory } from "../../domain/factories/tenant.factory";
 import { TimeslotFactory } from "../../domain/factories/timeslot.factory";
 import { IPlaceRepository } from "../../domain/place.repository";
 
@@ -42,13 +45,22 @@ export interface IGetByIdParams {
   id: EntityId;
 }
 
+export interface IBookTimeslotParams {
+  tenantId: EntityId;
+  placeId: EntityId;
+  seatId: EntityId;
+  timeslotId: EntityId;
+}
+
 @Injectable()
 export class PlaceService {
   constructor(
     private readonly repo: IPlaceRepository,
+    private readonly userRepo: IUserRepository,
     private readonly factory: PlaceFactory,
     private readonly seatFactory: SeatFactory,
     private readonly timeslotFactory: TimeslotFactory,
+    private readonly tenantFactory: TenantFactory,
     private readonly als: IAls,
   ) {}
 
@@ -106,6 +118,33 @@ export class PlaceService {
     await this.repo.save(place);
 
     return place;
+  }
+
+  public async bookTimeslot({
+    tenantId,
+    placeId,
+    seatId,
+    timeslotId,
+  }: IBookTimeslotParams): Promise<void> {
+    const tenant = this.tenantFactory.fromUser(
+      await this.userRepo.findById({ id: tenantId }),
+    );
+
+    const place = await this.repo.findById({
+      id: placeId,
+      include: { seats: { timeslots: { tenant: true } } },
+    });
+
+    const seat = place.Seats.find((seat) => seat.Id == seatId);
+    if (!seat) throw new DomainError("Invalid Seat.Id");
+
+    const timeslot = seat.Timeslots.find(
+      (timeslot) => timeslot.Id == timeslotId,
+    );
+    if (!timeslot) throw new DomainError("Invalid Timeslot.Id");
+
+    timeslot.ToBooked(tenant);
+    await this.repo.save(place);
   }
 
   @Transactional()

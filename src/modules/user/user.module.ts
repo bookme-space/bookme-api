@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { JwtModule, JwtService } from "@nestjs/jwt";
 
@@ -41,7 +41,7 @@ const domain = [UserFactory];
 
 @Module({
   imports: [
-    PlaceModule,
+    forwardRef(() => PlaceModule),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
