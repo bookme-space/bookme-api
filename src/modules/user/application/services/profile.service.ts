@@ -41,6 +41,8 @@ export class ProfileService {
       where: { tenant: id },
     });
     const reservations = await this.placeRepo.find({
+      take,
+      skip,
       where: { tenant: id },
       include: { seats: { timeslots: { tenant: id } } },
     });

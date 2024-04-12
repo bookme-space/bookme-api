@@ -1,4 +1,4 @@
-import { Entity } from "@core/domain";
+import { Entity, EntityId } from "@core/domain";
 
 import { Nullable } from "@app.types/common";
 import { Overlapable } from "@app.types/interfaces";
@@ -65,5 +65,9 @@ export class Timeslot extends Entity implements Overlapable {
 
   public IsOverlaps(object: Timeslot): boolean {
     return this.Timerange.IsOverlaps(object.Timerange);
+  }
+
+  public IsBookedByUser(id: EntityId): boolean {
+    return this.Tenant?.Id == id;
   }
 }

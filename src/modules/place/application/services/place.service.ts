@@ -1,6 +1,9 @@
 import { Injectable } from "@nestjs/common";
 
+import { EntityId } from "@core/domain";
+import { IPaging } from "@core/domain/abstract/interfaces";
 import { IAls } from "@core/modules/als";
+import { Transactional } from "@core/modules/database";
 
 import { ICreateSourceParms } from "src/modules/abstract/dtos";
 import { ICraeteTimerangeParams } from "src/modules/abstract/dtos/timerange.dto";
@@ -28,6 +31,15 @@ export interface ICreatePlaceParams {
   readonly seatsCount: number;
   readonly timerange: ICraeteTimerangeParams;
   readonly preview?: ICreateSourceParms;
+}
+
+export interface IGetAllParams {
+  take: number;
+  skip: number;
+}
+
+export interface IGetByIdParams {
+  id: EntityId;
 }
 
 @Injectable()
@@ -94,6 +106,27 @@ export class PlaceService {
     await this.repo.save(place);
 
     return place;
+  }
+
+  @Transactional()
+  public async getAll({
+    take,
+    skip,
+  }: IGetAllParams): Promise<IPaging<Place>> {
+    const total = await this.repo.count();
+    const items = await this.repo.find({
+      take,
+      skip,
+      include: { seats: true },
+    });
+    return { pagination: { total, take, skip }, items };
+  }
+
+  public async getById({ id }: IGetByIdParams): Promise<Place> {
+    return this.repo.findById({
+      id,
+      include: { seats: { timeslots: { tenant: true } } },
+    });
   }
 
   private getTimeslotsCountByTimerange({
