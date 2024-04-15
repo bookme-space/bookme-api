@@ -1,13 +1,4 @@
-import { FastifyReply, FastifyRequest } from "fastify";
-
-import {
-  Body,
-  Controller,
-  Post,
-  Req,
-  Res,
-  UseGuards,
-} from "@nestjs/common";
+import { Body, Controller, Post } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import {
   ApiBody,
@@ -25,41 +16,57 @@ import {
   RegisterDto,
   UserAuthorizedResultDto,
 } from "./dtos";
-import { RefreshGuard } from "./infrastructure/guards/refresh.cookie.guard";
+import { RefreshDto } from "./dtos/auth.dtos/refresh.dto";
 import { UserMapper } from "./infrastructure/persistence/mappers/user.mapper";
 
 @ApiTags("auth")
 @Controller("auth")
 @IsPublic()
 export class AuthController {
+  private readonly expIn: { access: string; refresh: string };
+
   constructor(
     private readonly config: ConfigService<RootConfig, true>,
     private readonly dateService: IDateService,
     private readonly service: AuthService,
     private readonly mapper: UserMapper,
-  ) {}
+  ) {
+    this.expIn = {
+      access: this.config.get("auth.access.expiresIn", {
+        infer: true,
+      }),
+      refresh: this.config.get("auth.refresh.expiresIn", {
+        infer: true,
+      }),
+    };
+  }
 
   @ApiBody({ type: LoginDto })
   @ApiOkResponse({ type: UserAuthorizedResultDto })
   @Post("login")
-  public async login(
-    @Res({ passthrough: true }) reply: FastifyReply,
-    @Body() { email, password }: LoginDto,
-  ) {
+  public async login(@Body() { email, password }: LoginDto) {
     const { access, refresh, user } = await this.service.login({
       email,
       password,
     });
 
-    this.setRefreshCookie(refresh, reply);
-    return { access, user: this.mapper.toDto(user) };
+    return {
+      access,
+      refresh,
+      accessExp: this.dateService
+        .end(this.expIn.access)
+        .getTime(),
+      refreshExp: this.dateService
+        .end(this.expIn.refresh)
+        .getTime(),
+      user: this.mapper.toDto(user),
+    };
   }
 
   @ApiBody({ type: RegisterDto })
   @ApiOkResponse({ type: UserAuthorizedResultDto })
   @Post("register")
   public async register(
-    @Res({ passthrough: true }) reply: FastifyReply,
     @Body()
     { email, firstname, lastname, password }: RegisterDto,
   ) {
@@ -71,38 +78,39 @@ export class AuthController {
         password,
       });
 
-    this.setRefreshCookie(refresh, reply);
-    return { access, user: this.mapper.toDto(user) };
+    return {
+      access,
+      refresh,
+      accessExp: this.dateService
+        .end(this.expIn.access)
+        .getTime(),
+      refreshExp: this.dateService
+        .end(this.expIn.refresh)
+        .getTime(),
+      user: this.mapper.toDto(user),
+    };
   }
 
+  @ApiBody({ type: RefreshDto })
   @ApiOkResponse({ type: UserAuthorizedResultDto })
-  @UseGuards(RefreshGuard)
   @Post("refresh")
   public async refresh(
-    @Req() request: FastifyRequest,
-    @Res({ passthrough: true }) reply: FastifyReply,
+    @Body() { refresh: _refresh }: RefreshDto,
   ) {
-    const { refresh: oldRefresh } = request.cookies;
     const { access, refresh, user } = await this.service.refresh(
-      { refresh: oldRefresh ?? "" },
+      { refresh: _refresh ?? "" },
     );
 
-    this.setRefreshCookie(refresh, reply);
-    return { access, user: this.mapper.toDto(user) };
-  }
-
-  private setRefreshCookie(
-    refresh: string,
-    reply: FastifyReply,
-  ): FastifyReply {
-    return reply.cookie("refresh", refresh, {
-      httpOnly: true,
-      sameSite: "strict",
-      expires: this.dateService.end(
-        this.config.get("auth.refresh.expiresIn", {
-          infer: true,
-        }),
-      ),
-    });
+    return {
+      access,
+      refresh,
+      accessExp: this.dateService
+        .end(this.expIn.access)
+        .getTime(),
+      refreshExp: this.dateService
+        .end(this.expIn.refresh)
+        .getTime(),
+      user: this.mapper.toDto(user),
+    };
   }
 }
