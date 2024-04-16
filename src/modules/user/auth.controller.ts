@@ -51,14 +51,11 @@ export class AuthController {
     });
 
     return {
-      access,
-      refresh,
-      accessExp: this.dateService
-        .end(this.expIn.access)
-        .getTime(),
-      refreshExp: this.dateService
-        .end(this.expIn.refresh)
-        .getTime(),
+      tokenData: {
+        access,
+        refresh,
+        exp: this.dateService.end(this.expIn.access).getTime(),
+      },
       user: this.mapper.toDto(user),
     };
   }
@@ -79,14 +76,11 @@ export class AuthController {
       });
 
     return {
-      access,
-      refresh,
-      accessExp: this.dateService
-        .end(this.expIn.access)
-        .getTime(),
-      refreshExp: this.dateService
-        .end(this.expIn.refresh)
-        .getTime(),
+      tokenData: {
+        access,
+        refresh,
+        exp: this.dateService.end(this.expIn.access).getTime(),
+      },
       user: this.mapper.toDto(user),
     };
   }
@@ -102,14 +96,11 @@ export class AuthController {
     );
 
     return {
-      access,
-      refresh,
-      accessExp: this.dateService
-        .end(this.expIn.access)
-        .getTime(),
-      refreshExp: this.dateService
-        .end(this.expIn.refresh)
-        .getTime(),
+      tokenData: {
+        access,
+        refresh,
+        exp: this.dateService.end(this.expIn.access).getTime(),
+      },
       user: this.mapper.toDto(user),
     };
   }
